@@ -1,9 +1,6 @@
 import { UploadDashboard } from './components/UploadDashboard';
 import { StockTable } from './components/StockTable';
 import { useStockStore } from './store/useStockStore';
-import { Navbar } from './components/Navbar';
-// import { exportToExcel } from './utils/export';
-// import { Download, Trash2 } from 'lucide-react';
 
 function App() {
   const { rawStocks } = useStockStore();
@@ -11,26 +8,26 @@ function App() {
   return (
     <div className="min-h-screen bg-[#18181b] text-white flex flex-col font-sans">
       {/* Header */}
-      <header className="bg-[#202023] border-b border-[#333] h-16 px-8 flex items-center justify-between sticky top-0 z-50">
+      <header className="bg-[#202023] border-b border-[#333] h-16 px-24 flex items-center justify-between sticky top-0 z-50">
         <div className="flex items-center">
           <h1 className="text-lg font-bold text-white tracking-wide uppercase">
             Stock Strategy Filter
           </h1>
         </div>
-        <Navbar />
       </header>
 
       {/* Main Layout - 2 Columns */}
-      <main className="flex-1 p-8 grid grid-cols-1 lg:grid-cols-[450px_1fr] gap-8 max-w-[1920px] mx-auto w-full h-[calc(100vh-64px)] overflow-hidden">
-        {/* Left Column: Upload / Controls */}
-        <div className="flex flex-col gap-6">
-          <div className="bg-[#121212] p-8 rounded-lg border border-[#333] shadow-lg h-full flex flex-col justify-center">
+      {/* Main Layout - Vertical Stack */}
+      <main className="flex-1 p-8 flex flex-col gap-8 max-w-[1920px] mx-auto w-full h-[calc(100vh-64px)]">
+        {/* Upload Section - Centered, limited width */}
+        <div className="w-[50%] max-w-3xl mx-auto shrink-0 my-10">
+          <div className="bg-[#121212] p-8 rounded-lg border border-[#333] shadow-lg flex flex-col justify-center">
             <UploadDashboard />
           </div>
         </div>
 
-        {/* Right Column: Table / Results */}
-        <div className="flex flex-col h-full overflow-hidden bg-[#121212] rounded-lg border border-[#333] shadow-lg">
+        {/* Results Section - Takes remaining space */}
+        <div className="flex-1 min-h-0 bg-[#121212] rounded-lg border border-[#333] shadow-lg flex flex-col overflow-hidden">
           {rawStocks.length > 0 ? (
             <StockTable />
           ) : (

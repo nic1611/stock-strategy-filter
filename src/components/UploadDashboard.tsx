@@ -50,7 +50,7 @@ export const UploadDashboard = () => {
         <div
             {...getRootProps()}
             className={`
-        w-full h-[500px] rounded-lg flex flex-col items-center justify-center transition-all cursor-pointer border-2 border-dashed
+        w-full h-64 rounded-lg flex flex-col items-center justify-center transition-all cursor-pointer border-2 border-dashed
         ${isDragActive
                     ? 'border-green-500 bg-[#1a1a1a] shadow-[0_0_20px_rgba(34,197,94,0.1)]'
                     : 'border-[#333333] bg-[#121212] hover:border-[#4d4d4d]'
