@@ -1,73 +1,82 @@
-# React + TypeScript + Vite
+📈 Stock Strategy Filter (SSF)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+    SSF é uma ferramenta de análise quantitativa que automatiza a filtragem de ações da B3. Transforme dados brutos em uma lista refinada de ativos de valor utilizando um pipeline rigoroso de 11 etapas.
 
-Currently, two official plugins are available:
+🎯 O Objetivo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Este projeto foi criado para investidores que seguem estratégias baseadas em Valor e Qualidade. Ele elimina o viés emocional e o trabalho manual de planilhas, aplicando filtros de liquidez, rentabilidade (EBIT), eficiência (ROIC) e valuation (EV/EBIT) de forma instantânea.
+⚙️ O Pipeline de 11 Etapas
 
-## React Compiler
+O algoritmo processa os dados seguindo esta hierarquia lógica:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+    Ingestão: Upload de arquivos CSV/Excel.
 
-## Expanding the ESLint configuration
+    Mapeamento: Normalização inteligente de colunas.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+    Liquidez: Apenas ativos com Volume > R$ 1 Milhão.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+    Lucratividade: Filtro de Margem EBIT positiva.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+    Qualidade: Filtro de ROIC > 10%.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+    Valuation: Ordenação por EV/EBIT (do menor para o maior).
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+    Deduplicação: Mantém apenas a classe de ação mais líquida por ticker.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+    Solvência: Exclusão de empresas em Recuperação Judicial.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+    Limpeza: Remoção de outliers e dados corrompidos.
+
+    Ranking: Atribuição de pontuação baseada no ranking final.
+
+    Display: Interface rica para tomada de decisão.
+
+🛠️ Tech Stack & Arquitetura
+
+A aplicação segue os princípios de Clean Architecture e S.O.L.I.D.:
+
+    Estado: Zustand - Gerenciamento de estado leve e escalável.
+
+    Tabelas: TanStack Table - Tabelas headless com alta performance.
+
+    Estilização: Tailwind CSS - Design responsivo e utilitário.
+
+    Testes: Vitest - Suíte de testes ultrarrápida para garantir a integridade dos filtros.
+
+🚀 Como Rodar o Projeto
+
+    Clone o repositório:
+    Bash
+
+git clone https://github.com/seu-usuario/stock-strategy-filter.git
+
+Instale as dependências:
+Bash
+
+npm install
+
+Inicie o servidor de desenvolvimento:
+Bash
+
+npm run dev
+
+Rode os testes unitários:
+Bash
+
+    npm run test
+
+📂 Estrutura de Pastas
+Plaintext
+
+src/
+├── domain/       # Funções puras de filtragem (Business Logic)
+├── store/        # Zustand stores para estado global
+├── components/   # UI components (Atomic Design)
+├── hooks/        # Lógica de processamento de arquivos
+└── __tests__/    # Cobertura de testes dos filtros
+
+📄 Licença
+
+Este projeto está sob a licença MIT. Consulte o arquivo LICENSE para mais detalhes.
+
+⭐ Gostou do projeto? Considere dar uma estrela no repositório!
