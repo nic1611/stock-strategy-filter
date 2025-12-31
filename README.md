@@ -68,12 +68,12 @@ Bash
 📂 Estrutura de Pastas
 Plaintext
 
-src/
-├── domain/       # Funções puras de filtragem (Business Logic)
-├── store/        # Zustand stores para estado global
-├── components/   # UI components (Atomic Design)
-├── hooks/        # Lógica de processamento de arquivos
-└── __tests__/    # Cobertura de testes dos filtros
+    src/
+    ├── domain/       # Funções puras de filtragem (Business Logic)
+    ├── store/        # Zustand stores para estado global
+    ├── components/   # UI components (Atomic Design)
+    ├── hooks/        # Lógica de processamento de arquivos
+    └── __tests__/    # Cobertura de testes dos filtros
 
 📄 Licença
 
