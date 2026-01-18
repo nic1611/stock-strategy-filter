@@ -3,15 +3,17 @@ import type { IStock, IRawStock, IFilterConfig } from '../@types/stock';
 import { processStocks } from '../domain/stockLogic';
 
 interface StockState {
-    rawStocks: IRawStock[];
+    rawStocks: (IRawStock | IStock)[];
     processedStocks: (IStock & { ranking: number })[];
     isProcessing: boolean;
     config: IFilterConfig;
+    selectedStock: (IStock & { ranking: number }) | null;
 
     setRawData: (data: IRawStock[]) => void;
     updateConfig: (newConfig: Partial<IFilterConfig>) => void;
     applyFilters: () => void;
     reset: () => void;
+    setSelectedStock: (stock: (IStock & { ranking: number }) | null) => void;
 }
 
 const DEFAULT_CONFIG: IFilterConfig = {
@@ -25,12 +27,10 @@ export const useStockStore = create<StockState>((set, get) => ({
     processedStocks: [],
     isProcessing: false,
     config: DEFAULT_CONFIG,
+    selectedStock: null,
 
     setRawData: (data) => {
         set({ rawStocks: data });
-        // Auto process on upload? Or wait for user?
-        // Spec doesn't strictly say, but "Upload -> Display" implies immediate feedback usually.
-        // Let's trigger process.
         get().applyFilters();
     },
 
@@ -45,10 +45,10 @@ export const useStockStore = create<StockState>((set, get) => ({
 
         set({ isProcessing: true });
 
-        // Wrap in setTimeout to allow UI update if dataset is huge (though 500 lines is small)
+        // Wrap in setTimeout to allow UI update
         setTimeout(() => {
             try {
-                const result = processStocks(rawStocks, config);
+                const result = processStocks(rawStocks as any[], config);
                 set({ processedStocks: result, isProcessing: false });
             } catch (error) {
                 console.error("Processing failed", error);
@@ -61,7 +61,12 @@ export const useStockStore = create<StockState>((set, get) => ({
         set({
             rawStocks: [],
             processedStocks: [],
-            config: DEFAULT_CONFIG
+            config: DEFAULT_CONFIG,
+            selectedStock: null
         });
+    },
+
+    setSelectedStock: (stock) => {
+        set({ selectedStock: stock });
     }
 }));

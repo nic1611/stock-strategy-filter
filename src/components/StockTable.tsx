@@ -17,8 +17,13 @@ const columnHelper = createColumnHelper<IStock & { ranking: number }>();
 
 export const StockTable = () => {
     const data = useStockStore((state) => state.processedStocks);
+    const selectedStock = useStockStore((state) => state.selectedStock);
+    const setSelectedStock = useStockStore((state) => state.setSelectedStock);
     const [sorting, setSorting] = useState<SortingState>([]);
     const [globalFilter, setGlobalFilter] = useState('');
+
+    // Limit to 40 stocks
+    const limitedData = useMemo(() => data.slice(0, 40), [data]);
 
     const columns = useMemo(() => [
         columnHelper.accessor('ranking', {
@@ -56,7 +61,7 @@ export const StockTable = () => {
     ], []);
 
     const table = useReactTable({
-        data,
+        data: limitedData,
         columns,
         state: {
             sorting,
@@ -81,7 +86,7 @@ export const StockTable = () => {
     return (
         <div className="w-full h-full flex flex-col bg-transparent">
             {/* Table Header (Top Bar inside Card) */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-[#333] bg-[#1a1a1a] rounded-t-lg">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-[#333] bg-[#121212] rounded-t-lg">
                 {/* Replicating the distinct header background from image */}
                 <div className="flex gap-4">
                 </div>
@@ -100,7 +105,7 @@ export const StockTable = () => {
 
             <div className="overflow-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent flex-1 bg-[#121212]">
                 <table className="w-full text-left text-sm border-collapse">
-                    <thead className="bg-[#1a1a1a] text-gray-300 font-semibold sticky top-0 z-10">
+                    <thead className="bg-[#121212] text-gray-300 font-semibold sticky top-0 z-10">
                         {table.getHeaderGroups().map(headerGroup => (
                             <tr key={headerGroup.id}>
                                 {headerGroup.headers.map(header => (
@@ -115,15 +120,34 @@ export const StockTable = () => {
                         ))}
                     </thead>
                     <tbody>
-                        {table.getRowModel().rows.map((row, i) => (
-                            <tr key={row.id} className={`transition group ${i % 2 === 0 ? 'bg-[#18181b]' : 'bg-[#1c1c1f]'} hover:bg-[#2a2a2d]`}>
-                                {row.getVisibleCells().map(cell => (
-                                    <td key={cell.id} className="px-6 py-3.5 whitespace-nowrap border-b border-transparent group-hover:border-[#333]">
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                    </td>
-                                ))}
-                            </tr>
-                        ))}
+                        {table.getRowModel().rows.map((row) => {
+                            const isSelected = selectedStock?.ticker === row.original.ticker;
+                            return (
+                                <tr
+                                    key={row.id}
+                                    onClick={() => {
+                                        setSelectedStock(row.original);
+                                        // Scroll to chart with a small delay to ensure it's rendered if it was toggled
+                                        setTimeout(() => {
+                                            document.getElementById('price-history-chart')?.scrollIntoView({
+                                                behavior: 'smooth',
+                                                block: 'start'
+                                            });
+                                        }, 100);
+                                    }}
+                                    className={`transition group cursor-pointer ${isSelected
+                                        ? 'bg-[#2a2a3d] border-l-2 border-l-blue-500'
+                                        : 'bg-[#121212]'
+                                        } hover:bg-[#2a2a2d]`}
+                                >
+                                    {row.getVisibleCells().map(cell => (
+                                        <td key={cell.id} className="px-6 py-3.5 whitespace-nowrap border-b border-transparent group-hover:border-[#333]">
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </td>
+                                    ))}
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
             </div>

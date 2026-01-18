@@ -170,10 +170,14 @@ export const assignRanking = (stocks: IStock[]): (IStock & { ranking: number })[
 
 // Master Pipeline
 export const processStocks = (
-    rawData: IRawStock[],
+    data: IRawStock[] | IStock[],
     config: { minLiquidity: number; minMarketCap?: number; minRoic: number }
 ) => {
-    let stocks = normalizeData(rawData);
+    // If data elements don't have companyName or other fields as strings/parsed, normalize.
+    // Heuristic: if the first element has a 'ticker' that is a string and ebitMargin is a number, it's likely already normalized.
+    const isNormalized = data.length > 0 && typeof (data[0] as any).ebitMargin === 'number';
+
+    let stocks: IStock[] = isNormalized ? (data as IStock[]) : normalizeData(data as IRawStock[]);
 
     // 3. Liquidity
     stocks = filterLiquidity(stocks, config.minLiquidity);
