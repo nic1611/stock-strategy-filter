@@ -22,6 +22,13 @@ export const UploadDashboard = () => {
                     skipEmptyLines: true,
                     complete: (results) => {
                         setRawData(results.data as any);
+                        // Redirect to table section
+                        setTimeout(() => {
+                            document.getElementById('table-section')?.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }, 100);
                     },
                     error: (error: any) => {
                         console.error('CSV Parsing Error:', error);
@@ -37,6 +44,13 @@ export const UploadDashboard = () => {
                 const worksheet = workbook.Sheets[firstSheetName];
                 const jsonData = XLSX.utils.sheet_to_json(worksheet);
                 setRawData(jsonData as any);
+                // Redirect to table section
+                setTimeout(() => {
+                    document.getElementById('table-section')?.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }, 100);
             };
             reader.readAsArrayBuffer(file);
         }

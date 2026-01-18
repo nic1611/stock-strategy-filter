@@ -129,7 +129,7 @@ export const StockTable = () => {
                                         setSelectedStock(row.original);
                                         // Scroll to chart with a small delay to ensure it's rendered if it was toggled
                                         setTimeout(() => {
-                                            document.getElementById('price-history-chart')?.scrollIntoView({
+                                            document.getElementById('chart-section')?.scrollIntoView({
                                                 behavior: 'smooth',
                                                 block: 'start'
                                             });
